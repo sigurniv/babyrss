@@ -12,7 +12,7 @@ import (
 )
 
 type RssStreamer struct {
-	streamChan     chan interface{}
+	streamChan     chan Item
 	url            string
 	updateInterval time.Duration
 	lastUpdateTime time.Time
@@ -23,7 +23,7 @@ var ErrFetch = errors.New("Error fetching rss")
 func New(url string) *RssStreamer {
 	return &RssStreamer{
 		url:            url,
-		streamChan:     make(chan interface{}),
+		streamChan:     make(chan Item),
 		updateInterval: time.Second * 5,
 		lastUpdateTime: now.BeginningOfWeek(),
 	}
@@ -34,7 +34,7 @@ func (streamer *RssStreamer) SetUpdateInterval(interval time.Duration) *RssStrea
 	return streamer
 }
 
-func (streamer *RssStreamer) GetUpdatesChan() chan interface{} {
+func (streamer *RssStreamer) GetUpdatesChan() chan Item {
 	go streamer.getUpdates()
 
 	return streamer.streamChan

@@ -25,7 +25,7 @@ type Item struct {
 }
 
 func (item Item) String() string {
-	return fmt.Sprintf("title: %s, link: %s", item.Title, item.Link)
+	return fmt.Sprintf("%s %s", item.Title, item.Link)
 }
 
 func (rss Rss) decode(data []byte) Feed {
