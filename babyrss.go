@@ -25,7 +25,7 @@ func New(url string) *RssStreamer {
 		url:            url,
 		streamChan:     make(chan Item),
 		updateInterval: time.Second * 5,
-		lastUpdateTime: now.BeginningOfWeek(),
+		lastUpdateTime: time.Now(),
 	}
 }
 
@@ -55,7 +55,7 @@ func (streamer *RssStreamer) getUpdates() {
 		case <-ticker.C:
 			if !gettingUpdates {
 				gettingUpdates = true
-				//updateTime := time.Now()
+				updateTime := time.Now()
 
 				body, err := streamer.fetch(streamer.url)
 				if err != nil {
@@ -78,7 +78,7 @@ func (streamer *RssStreamer) getUpdates() {
 					streamer.streamChan <- item
 				}
 
-				//streamer.lastUpdateTime = updateTime
+				streamer.lastUpdateTime = updateTime
 
 				gettingUpdates = false
 			}
