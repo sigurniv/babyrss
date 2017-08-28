@@ -7,8 +7,6 @@ import (
 	"errors"
 	"io/ioutil"
 	"log"
-
-	"github.com/jinzhu/now"
 )
 
 type RssStreamer struct {
@@ -41,8 +39,6 @@ func (streamer *RssStreamer) GetUpdatesChan() chan Item {
 }
 
 func (streamer *RssStreamer) getUpdates() {
-	now.TimeFormats = append(now.TimeFormats, "Wed, 23 Aug 2017 15:27:21 GMT")
-
 	ticker := time.NewTicker(streamer.updateInterval)
 	defer ticker.Stop()
 
@@ -54,8 +50,8 @@ func (streamer *RssStreamer) getUpdates() {
 		select {
 		case <-ticker.C:
 			if !gettingUpdates {
+				log.Println("Getting rss updates")
 				gettingUpdates = true
-				updateTime := time.Now()
 
 				body, err := streamer.fetch(streamer.url)
 				if err != nil {
@@ -73,16 +69,16 @@ func (streamer *RssStreamer) getUpdates() {
 
 					if !itemTime.After(streamer.lastUpdateTime) {
 						continue
+					} else {
+						streamer.lastUpdateTime = itemTime
 					}
 
+					log.Printf("itemTime: %s, strTime: %s", itemTime, streamer.lastUpdateTime)
 					streamer.streamChan <- item
 				}
 
-				streamer.lastUpdateTime = updateTime
-
 				gettingUpdates = false
 			}
-
 		}
 	}
 }

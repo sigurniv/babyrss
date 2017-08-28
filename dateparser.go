@@ -179,8 +179,7 @@ var dateFormats = []string{
 	"01-02-2006",
 }
 
-// ParseDate parses a given date string using a large
-// list of commonly found feed date formats.
+// ParseDate parses a given date string using set of formats
 func ParseDate(ds string) (t time.Time, err error) {
 	d := strings.TrimSpace(ds)
 	if d == "" {
